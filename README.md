@@ -1,3 +1,3 @@
 # UE4_FY_Demo
 
-Developed with Unreal Engine 4
+A Demo game to collect data for Machine Learning for University.
