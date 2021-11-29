@@ -1,5 +1,5 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+#pragma once
 
-#include "UE4_FY_DemoGameModeBase.h"
-
+#include "CoreMinimal.h"

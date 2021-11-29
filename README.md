@@ -1,3 +1,3 @@
-# UE4_FY_Demo
+# Sattrial
 
-A Demo game to collect data for Machine Learning for University.
+Developed with Unreal Engine 4

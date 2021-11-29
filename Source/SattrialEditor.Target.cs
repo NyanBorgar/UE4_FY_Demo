@@ -3,12 +3,12 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class UE4_FY_DemoEditorTarget : TargetRules
+public class SattrialEditorTarget : TargetRules
 {
-	public UE4_FY_DemoEditorTarget( TargetInfo Target) : base(Target)
+	public SattrialEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.AddRange( new string[] { "UE4_FY_Demo" } );
+		ExtraModuleNames.Add("Sattrial");
 	}
 }
