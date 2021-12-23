@@ -9,7 +9,13 @@
 UCLASS()
 class SATTRIAL_API ACpluscharacter : public ACharacter
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
+
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = paper)
+		class UPaperFlipbookComponent* PlayerComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = paper)
+		class UPaperFlipbook* PlayerAnimation;
 
 public:
 	// Sets default values for this character's properties

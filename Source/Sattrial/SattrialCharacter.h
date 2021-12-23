@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
+#include "GameFramework/PlayerStart.h"
 #include "SattrialCharacter.generated.h"
 
 class UTextRenderComponent;
@@ -39,6 +40,8 @@ protected:
 	// The animation to play while idle (standing still)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* IdleAnimation;
+
+	//ASattrialCharacter();
 
 	/** Called to choose the correct animation to play based on the character's movement state */
 	void UpdateAnimation();

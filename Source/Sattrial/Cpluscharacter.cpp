@@ -2,12 +2,32 @@
 
 
 #include "Cpluscharacter.h"
+#include "PaperFlipbookComponent.h"
+#include "PaperFlipbook.h"
+#include "UObject/ConstructorHelpers.h"
 
 // Sets default values
-ACpluscharacter::ACpluscharacter()
+ACpluscharacter::ACpluscharacter(const FObjectInitializer& PCIP)
+	: Super(PCIP)
 {
+	struct FConstructorStatics
+	{
+		ConstructorHelpers::FObjectFinderOptional<UPaperFlipbook> playerAsset;
+		FConstructorStatics()
+			: playerAsset(TEXT("PaperFlipbook'/Game/2DSideScrollerCPP/Textures/PlayerRun.PlayerRun'"))
+		{
+		}
+	};
+
+	static FConstructorStatics ConstructorStatics;
+	PlayerAnimation = ConstructorStatics.playerAsset.Get();
+
+	PlayerComponent = PCIP.CreateDefaultSubobject<UPaperFlipbookComponent>(this, TEXT("playercomponent"));
+	PlayerComponent->SetFlipbook(PlayerAnimation);
+
+
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	//PrimaryActorTick.bCanEverTick = true;
 
 }
 

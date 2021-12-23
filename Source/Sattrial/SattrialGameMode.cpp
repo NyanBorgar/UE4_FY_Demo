@@ -6,5 +6,5 @@
 ASattrialGameMode::ASattrialGameMode()
 {
 	// Set default pawn class to our character
-	DefaultPawnClass = ASattrialCharacter::StaticClass();	
+	DefaultPawnClass = ASattrialCharacter::StaticClass();
 }

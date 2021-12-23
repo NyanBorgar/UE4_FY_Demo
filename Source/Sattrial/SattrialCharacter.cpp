@@ -8,6 +8,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
+#include "GameFramework/PlayerStart.h"
 #include "Camera/CameraComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
@@ -17,6 +18,7 @@ DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
 ASattrialCharacter::ASattrialCharacter()
 {
+
 	// Use only Yaw from the controller and ignore the rest of the rotation.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
@@ -50,11 +52,11 @@ ASattrialCharacter::ASattrialCharacter()
 
 	// Configure character movement
 	GetCharacterMovement()->GravityScale = 2.0f;
-	GetCharacterMovement()->AirControl = 0.80f;
-	GetCharacterMovement()->JumpZVelocity = 1000.f;
-	GetCharacterMovement()->GroundFriction = 3.0f;
-	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
-	GetCharacterMovement()->MaxFlySpeed = 600.0f;
+	GetCharacterMovement()->AirControl = 0.50f;
+	GetCharacterMovement()->JumpZVelocity = 800.f;
+	GetCharacterMovement()->GroundFriction = 5.0f;
+	GetCharacterMovement()->MaxWalkSpeed = 200.0f;
+	GetCharacterMovement()->MaxFlySpeed = 500.0f;
 
 	// Lock character motion onto the XZ plane, so the character can't move in or out of the screen
 	GetCharacterMovement()->bConstrainToPlane = true;
@@ -110,8 +112,8 @@ void ASattrialCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASattrialCharacter::MoveRight);
 
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &ASattrialCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &ASattrialCharacter::TouchStopped);
+	//PlayerInputComponent->BindTouch(IE_Pressed, this, &ASattrialCharacter::TouchStarted);
+	//PlayerInputComponent->BindTouch(IE_Released, this, &ASattrialCharacter::TouchStopped);
 }
 
 void ASattrialCharacter::MoveRight(float Value)
