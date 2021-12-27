@@ -129,8 +129,9 @@ void ASattrialCharacter::charlog(FString Savedir, FString Filename, UCharacterMo
 
 void ASattrialCharacter::UpdateAnimation(int flag)
 {
-	if (flag == 1) {
-		GetSprite()->SetFlipbook(PunchAnimation);
+	while (flag == 1) {
+		if(GetSprite()->GetFlipbook() != PunchAnimation)
+			GetSprite()->SetFlipbook(PunchAnimation);
 	}
 	else {
 		const FVector PlayerVelocity = GetVelocity();
@@ -172,7 +173,7 @@ void ASattrialCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 
 void ASattrialCharacter::StopPunch() {
-	//UpdateCharacter(0);
+	UpdateCharacter(0);
 }
 
 void ASattrialCharacter::Punch() {
