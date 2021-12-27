@@ -108,7 +108,22 @@ bool ASattrialCharacter::SaveArrayText(FString Savedir, FString FileName, TArray
 }
 
 //CSV Logging Row Addition
-void charlog(APlayerState* CurrentState) {
+void ASattrialCharacter::charlog(FString Savedir, FString Filename, UCharacterMovementComponent* charmov) {
+	FVector SaveVect = charmov->GetActorLocation();
+	TArray<float> SaveText;
+	SaveText.Add(SaveVect.X);
+	SaveText.Add(SaveVect.Y);
+	SaveText.Add(SaveVect.Z);
+	Savedir += "\\";
+	Savedir += Filename;
+	
+	FString finalString = "";
+	for (float& Each : SaveText) {
+		finalString += FString::SanitizeFloat(Each);
+		finalString += ",";
+	}
+	finalString += LINE_TERMINATOR;
+	FFileHelper::SaveStringToFile(finalString, *Savedir, FFileHelper::EEncodingOptions::AutoDetect, &IFileManager::Get(), EFileWrite::FILEWRITE_Append);
 	
 }
 
@@ -177,6 +192,9 @@ void ASattrialCharacter::SwitchLevels(float direction) {
 	}
 
 }
+
+
+
 
 void ASattrialCharacter::MoveRight(float Value)
 {

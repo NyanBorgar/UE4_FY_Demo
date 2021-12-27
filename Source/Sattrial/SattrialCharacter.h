@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerStart.h"
@@ -24,9 +25,14 @@ class ASattrialCharacter : public APaperCharacter
 {
 	GENERATED_BODY()
 
-		UFUNCTION(BlueprintCallable, Category = "Custom", meta = (Keywords = "Save"))
-		static bool SaveArrayText(FString Savedir, FString FileName, TArray<FString> SaveText, bool AllowOverwriting);
+	UFUNCTION(BlueprintCallable, Category = "Custom", meta = (Keywords = "Save"))
+	static bool SaveArrayText(FString Savedir, FString FileName, TArray<FString> SaveText, bool AllowOverwriting);
 
+	UFUNCTION(BlueprintCallable, Category = "Custom", meta = (Keywords = "SaveMove"))
+	static void charlog(FString Savedir, FString Filename, UCharacterMovementComponent* charmov);
+
+
+	
 	/** Side view camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera, meta=(AllowPrivateAccess="true"))
 	class UCameraComponent* SideViewCameraComponent;
@@ -81,15 +87,13 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
-	FName x = "0";
-	FTableRowBase RowAdd;
+	
 
 	void Punch();
 	void StopPunch();
 	void SwitchLevels(float direction);
 
-	void charlog(APlayerState* CurrentState);
-
+	
 	//APlayerController* currentController;
 	TArray<FString> levels;
 };
