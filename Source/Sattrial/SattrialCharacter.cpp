@@ -7,8 +7,12 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PlayerController.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/PlayerStart.h"
+#include "Engine/DataTable.h"
+#include "Misc/FileHelper.h"
+#include "HAL/PlatformFileManager.h"
 #include "Camera/CameraComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
@@ -73,6 +77,10 @@ ASattrialCharacter::ASattrialCharacter()
     // 	TextComponent->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
     // 	TextComponent->SetupAttachment(RootComponent);
 
+
+	levels.Add("Level1");
+	levels.Add("2DSideScrollerExampleMap");
+
 	// Enable replication on the Sprite component so animations show up when networked
 	GetSprite()->SetIsReplicated(true);
 	bReplicates = true;
@@ -81,16 +89,44 @@ ASattrialCharacter::ASattrialCharacter()
 //////////////////////////////////////////////////////////////////////////
 // Animation
 
-void ASattrialCharacter::UpdateAnimation()
+//CSV Logging File Handler
+bool ASattrialCharacter::SaveArrayText(FString Savedir, FString FileName, TArray<FString> SaveText, bool AllowOverwriting = false)
 {
-	const FVector PlayerVelocity = GetVelocity();
-	const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
+	Savedir += "\\";
+	Savedir += FileName;
+	if (!AllowOverwriting) {
+		if (FPlatformFileManager::Get().GetPlatformFile().FileExists(*Savedir)) {
+			return false;
+		}
+	}
+	FString FinalString = "";
+	for (FString& Each : SaveText) {
+		FinalString += Each;
+		FinalString += LINE_TERMINATOR;
+	}
+	return FFileHelper::SaveStringToFile(FinalString, *Savedir);
+}
 
-	// Are we moving or standing still?
-	UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
-	if( GetSprite()->GetFlipbook() != DesiredAnimation 	)
-	{
-		GetSprite()->SetFlipbook(DesiredAnimation);
+//CSV Logging Row Addition
+void charlog(APlayerState* CurrentState) {
+	
+}
+
+void ASattrialCharacter::UpdateAnimation(int flag)
+{
+	if (flag == 1) {
+		GetSprite()->SetFlipbook(PunchAnimation);
+	}
+	else {
+		const FVector PlayerVelocity = GetVelocity();
+		const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
+
+		// Are we moving or standing still?
+		UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
+		if (GetSprite()->GetFlipbook() != DesiredAnimation)
+		{
+			GetSprite()->SetFlipbook(DesiredAnimation);
+		}
 	}
 }
 
@@ -98,7 +134,7 @@ void ASattrialCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	
-	UpdateCharacter();	
+	UpdateCharacter(0);	
 }
 
 
@@ -111,9 +147,35 @@ void ASattrialCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASattrialCharacter::MoveRight);
+	PlayerInputComponent->BindAction("Punch", IE_Pressed, this, &ASattrialCharacter::Punch);
+	PlayerInputComponent->BindAction("Punch", IE_Released, this, &ASattrialCharacter::StopPunch);
+	PlayerInputComponent->BindAxis("SwitchLevels", this, &ASattrialCharacter::SwitchLevels);
 
 	//PlayerInputComponent->BindTouch(IE_Pressed, this, &ASattrialCharacter::TouchStarted);
 	//PlayerInputComponent->BindTouch(IE_Released, this, &ASattrialCharacter::TouchStopped);
+}
+
+
+void ASattrialCharacter::StopPunch() {
+	//UpdateCharacter(0);
+}
+
+void ASattrialCharacter::Punch() {
+	UpdateCharacter(1);
+}
+
+void ASattrialCharacter::SwitchLevels(float direction) {
+	if (direction) {
+		FString current = GetWorld()->GetMapName();
+		current.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
+		if (current == levels[0] && direction > 0) {
+			UGameplayStatics::OpenLevel(GetWorld(), FName(levels[1]));
+		}
+		else {
+			UGameplayStatics::OpenLevel(GetWorld(), FName(levels[0]));
+		}
+	}
+
 }
 
 void ASattrialCharacter::MoveRight(float Value)
@@ -136,10 +198,10 @@ void ASattrialCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const
 	StopJumping();
 }
 
-void ASattrialCharacter::UpdateCharacter()
+void ASattrialCharacter::UpdateCharacter(int flag)
 {
 	// Update animation to match the motion
-	UpdateAnimation();
+	UpdateAnimation(flag);
 
 	// Now setup the rotation of the controller based on the direction we are travelling
 	const FVector PlayerVelocity = GetVelocity();	

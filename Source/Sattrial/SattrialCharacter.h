@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
+#include "GameFramework/PlayerController.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerStart.h"
 #include "SattrialCharacter.generated.h"
 
@@ -21,6 +23,9 @@ UCLASS(config=Game)
 class ASattrialCharacter : public APaperCharacter
 {
 	GENERATED_BODY()
+
+		UFUNCTION(BlueprintCallable, Category = "Custom", meta = (Keywords = "Save"))
+		static bool SaveArrayText(FString Savedir, FString FileName, TArray<FString> SaveText, bool AllowOverwriting);
 
 	/** Side view camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera, meta=(AllowPrivateAccess="true"))
@@ -41,15 +46,22 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* IdleAnimation;
 
+	// The animation to play when using the Punch function
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* PunchAnimation;
+
 	//ASattrialCharacter();
 
 	/** Called to choose the correct animation to play based on the character's movement state */
-	void UpdateAnimation();
+	void UpdateAnimation(int flag);
+
+	//Update Punch Animation
+	//void PunchAnim(UPaperFlipbook* DesiredAnim);
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
 
-	void UpdateCharacter();
+	void UpdateCharacter(int flag);
 
 	/** Handle touch inputs. */
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
@@ -68,4 +80,16 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	FName x = "0";
+	FTableRowBase RowAdd;
+
+	void Punch();
+	void StopPunch();
+	void SwitchLevels(float direction);
+
+	void charlog(APlayerState* CurrentState);
+
+	//APlayerController* currentController;
+	TArray<FString> levels;
 };

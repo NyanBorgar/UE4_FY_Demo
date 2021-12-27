@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Cpluscharacter.h"
+#include "SlimePawn.h"
 #include "PaperFlipbookComponent.h"
 #include "PaperFlipbook.h"
 #include "UObject/ConstructorHelpers.h"
 
 // Sets default values
-ACpluscharacter::ACpluscharacter(const FObjectInitializer& PCIP)
+ASlimePawn::ASlimePawn(const FObjectInitializer& PCIP)
 	: Super(PCIP)
 {
 	struct FConstructorStatics
@@ -20,33 +20,30 @@ ACpluscharacter::ACpluscharacter(const FObjectInitializer& PCIP)
 	};
 
 	static FConstructorStatics ConstructorStatics;
-	PlayerAnimation = ConstructorStatics.playerAsset.Get();
-
-	PlayerComponent = PCIP.CreateDefaultSubobject<UPaperFlipbookComponent>(this, TEXT("playercomponent"));
-	PlayerComponent->SetFlipbook(PlayerAnimation);
-
-
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	SlimeAnimation = ConstructorStatics.playerAsset.Get();
+	SlimeComponent = PCIP.CreateOptionalDefaultSubobject<UPaperFlipbookComponent>(this, TEXT("slimecomponent"));
+	SlimeComponent->SetFlipbook(SlimeAnimation);
+ 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	//PrimaryActorTick.bCanEverTick = true;
 
 }
 
 // Called when the game starts or when spawned
-void ACpluscharacter::BeginPlay()
+void ASlimePawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ACpluscharacter::Tick(float DeltaTime)
+void ASlimePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
 // Called to bind functionality to input
-void ACpluscharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ASlimePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
