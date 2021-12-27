@@ -104,7 +104,7 @@ bool ASattrialCharacter::SaveArrayText(FString Savedir, FString FileName, TArray
 		FinalString += Each;
 		FinalString += LINE_TERMINATOR;
 	}
-	return FFileHelper::SaveStringToFile(FinalString, *Savedir);
+	return FFileHelper::SaveStringToFile(FinalString, *Savedir, FFileHelper::EEncodingOptions::AutoDetect, &IFileManager::Get(), EFileWrite::FILEWRITE_Append);
 }
 
 //CSV Logging Row Addition
